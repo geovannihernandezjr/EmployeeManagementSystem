@@ -13,7 +13,7 @@ public interface EmployeeManager {
 
     public boolean createEmployee(Employee newEmployee);
 
-    public boolean deleteEmployee(int id);
+    public boolean deleteEmployee(int id) throws EmployeeNotFoundException;
 
     public boolean updateEmployee(Employee updateEmployee);
 

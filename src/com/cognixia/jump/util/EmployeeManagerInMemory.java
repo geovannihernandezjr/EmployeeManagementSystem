@@ -41,27 +41,37 @@ public class EmployeeManagerInMemory implements EmployeeManager{
 
         employeeList.add(newEmployee);
 
-        for (Employee emp: employeeList){
-            if(emp.getId() == idCounter){
-                return true;
-            }
-        }
-        return false;
+        return employeeList.contains(newEmployee);
 
     }
 
     @Override
-    public boolean deleteEmployee(int id) {
-        return false;
+    public boolean deleteEmployee(int id) throws EmployeeNotFoundException {
+        Employee deleteEmp = findEmployeeById(id);
+        employeeList.remove(deleteEmp);
+        return !employeeList.contains(deleteEmp);
     }
 
     @Override
     public boolean updateEmployee(Employee updateEmployee) {
+        for(int i =0; i < employeeList.size(); i++){
+            if(employeeList.get(i).getId() == updateEmployee.getId()){
+                employeeList.set(i, updateEmployee);
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public List<Employee> getEmployeesByDepartment(String dept) {
-        return null;
+        List<Employee> deptEmployee = new ArrayList<Employee>();
+
+        for (Employee emp: employeeList){
+            if(emp.getDepartment().equals(dept)){
+                deptEmployee.add(emp);
+            }
+        }
+        return deptEmployee;
     }
 }
