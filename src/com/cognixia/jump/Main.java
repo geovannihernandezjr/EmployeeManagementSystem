@@ -1,7 +1,13 @@
 package com.cognixia.jump;
 // CRUD Operations - Create Read Update Delete
 
+import com.cognixia.jump.exceptions.BlankDepartmentNameException;
+import com.cognixia.jump.exceptions.BlankNameException;
+import com.cognixia.jump.exceptions.EmailNotSupportedException;
+import com.cognixia.jump.exceptions.SalaryNumberException;
 import com.cognixia.jump.model.Employee;
+import com.cognixia.jump.util.CreateEmployeeManager;
+import com.cognixia.jump.util.CreateUpdateDeleteEmployeeManger;
 import com.cognixia.jump.util.EmployeeManager;
 import com.cognixia.jump.util.EmployeeManagerInMemory;
 
@@ -27,11 +33,13 @@ import java.util.Scanner;
 public class Main {
     private static EmployeeManager employeeManager;
     private static Scanner sc;
+    private static CreateUpdateDeleteEmployeeManger createEmployeeManager;
 
 
     public static void main(String[] args) {
         employeeManager = new EmployeeManagerInMemory();
         sc = new Scanner(System.in);
+        createEmployeeManager = new CreateEmployeeManager();
         // set up my menu
         System.out.println("WELCOME TO THE EMPLOYEE MANAGEMENT SYSTEM (EMS)\n");
         mainMenu();
@@ -47,35 +55,34 @@ public class Main {
                 System.out.println("3. Create employee");
                 System.out.println("4. Delete employee");
                 System.out.println("5. Update employee");
-                System.out.println("6. View employees by department(s)");
-                System.out.println("7. Exit");
+                System.out.println("6. Exit");
 
                 int option = sc.nextInt();
                 sc.nextLine();
 
                 switch (option) {
-                    case 1:
+                    case 1: // view employees
                         viewEmployees();
                         break;
-                    case 2:
+                    case 2: // view employee by id
                         break;
-                    case 3:
+                    case 3: // create new employee
+                        createEmployeesMenu();
                         break;
-                    case 4:
+                    case 4: // delete employee
                         break;
-                    case 5:
+                    case 5: // update employee
                         break;
-                    case 6:
-                        break;
-                    case 7:
+                    case 6: //exit
                         break;
 
+
                     default:
-                        System.out.println("\nPlease enter a number between 1 and 7");
+                        System.out.println("\nPlease enter a number between 1 and 6");
                         break;
                 }
 
-                if (option == 7) {
+                if (option == 6) {
                     break;
                 }
 
@@ -131,6 +138,64 @@ public class Main {
                 System.out.println(emp);
             }
         }
+    }
+
+    public static void createEmployeesMenu(){
+
+
+        while (true) {
+            try {
+                System.out.println("Add new employee to EMS selected, you will need to enter the information for the employee");
+                String employeeName = createEmployeeManager.employeeName(sc);
+                String departmentName = createEmployeeManager.departmentName(sc);
+                int salary = createEmployeeManager.salaryAmount(sc);
+                String employeeEmail = createEmployeeManager.employeeEmail(sc);
+
+                Employee newEmployee = new Employee(0, employeeName, departmentName, salary, employeeEmail);
+
+                if (employeeManager.createEmployee(newEmployee)){
+                    System.out.println("Employee :" + newEmployee + " was successfully added to EMS.");
+                }
+                else{
+                    System.out.println("Employee was not added to EMS");
+                }
+
+                System.out.println("""
+                        Added new employee to EMS. Would you like to:\s
+                        1. Select all employee
+                        2. Add another employee
+                        3. Exit to return to main menu""");
+                int option = sc.nextInt();
+                sc.nextLine();
+                switch(option){
+                    case 1:
+                        viewAllEmployees();
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        System.out.println("Enter number 1-3");
+                        break;
+                }
+                if (option == 2){
+                    continue;
+                }
+                if (option == 3){
+                    break;
+                }
+
+            }
+            catch (InputMismatchException e){
+                sc.nextLine();
+                System.out.println("Enter number 1-3.");
+            } catch (BlankNameException | BlankDepartmentNameException | SalaryNumberException |
+                     EmailNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
 }
