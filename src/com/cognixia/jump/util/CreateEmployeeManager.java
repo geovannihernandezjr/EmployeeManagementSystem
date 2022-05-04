@@ -17,7 +17,7 @@ public class CreateEmployeeManager implements CreateUpdateDeleteEmployeeManger{
                 System.out.println("Enter name for the new employee being added to EMS.");
                 String employeeName = sc.nextLine();
 
-                if (employeeName.isEmpty() || employeeName.isBlank()) {
+                if (employeeName.isBlank()) {
                     throw new BlankResponseException("Cannot leave name blank, must enter a name!");
                 }
                 return employeeName;
@@ -34,7 +34,7 @@ public class CreateEmployeeManager implements CreateUpdateDeleteEmployeeManger{
             try {
                 System.out.println("Enter name of department that employee is at.");
                 String departmentName = sc.nextLine();
-                if (departmentName.isBlank() || departmentName.isEmpty()) {
+                if (departmentName.isEmpty()) {
                     throw new BlankResponseException("Cannot leave department name as blank!!");
                 }
                 return departmentName;
@@ -52,6 +52,9 @@ public class CreateEmployeeManager implements CreateUpdateDeleteEmployeeManger{
             try {
                 System.out.println("Enter the salary amount for employee.");
                 int salary = sc.nextInt();
+                if (salary<0){
+                    throw new SalaryNumberException();
+                }
 
                 sc.nextLine();
                 return salary;
@@ -59,6 +62,9 @@ public class CreateEmployeeManager implements CreateUpdateDeleteEmployeeManger{
             } catch (InputMismatchException e) {
                 sc.nextLine();
                 System.out.println("Not a real number. Must be greater than 0 and no '.' or ',' ");
+            }
+            catch (SalaryNumberException ignore){
+                System.out.println(ignore);
             }
         }
     }
@@ -71,7 +77,7 @@ public class CreateEmployeeManager implements CreateUpdateDeleteEmployeeManger{
                 String employeeEmail = sc.nextLine();
 
 
-                if(employeeEmail.isEmpty() || employeeEmail.isBlank()){
+                if(employeeEmail.isBlank()){
                     throw new BlankResponseException("Cannot leave email blank, must enter a valid email!!!");
                 }
                 else if (!employeeEmail.matches("[a-zA-Z\\.]+@[a-zA-Z]+\\.com")) {

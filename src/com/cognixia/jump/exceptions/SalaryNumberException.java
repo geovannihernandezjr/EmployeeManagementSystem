@@ -5,6 +5,8 @@ public class SalaryNumberException extends Exception{
     private static final long serialVersionUID = 1L;
 
     public SalaryNumberException(){
-        super("Must enter a valid whole number.");
+
+        super("Must enter a valid whole number greater than 0.");
+
     }
 }
