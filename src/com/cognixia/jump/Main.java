@@ -2,7 +2,7 @@ package com.cognixia.jump;
 // CRUD Operations - Create Read Update Delete
 
 import com.cognixia.jump.exceptions.BlankDepartmentNameException;
-import com.cognixia.jump.exceptions.BlankNameException;
+import com.cognixia.jump.exceptions.BlankResponseException;
 import com.cognixia.jump.exceptions.EmailNotSupportedException;
 import com.cognixia.jump.exceptions.SalaryNumberException;
 import com.cognixia.jump.model.Employee;
@@ -52,9 +52,9 @@ public class Main {
                 System.out.println("Please select one of the following options:");
                 System.out.println("1. View all employees");
                 System.out.println("2. View employee by ID");
-                System.out.println("3. Create employee");
-                System.out.println("4. Delete employee");
-                System.out.println("5. Update employee");
+                System.out.println("3. Create employee Menu");
+                System.out.println("4. Delete employee Menu");
+                System.out.println("5. Update employee Menu");
                 System.out.println("6. Exit");
 
                 int option = sc.nextInt();
@@ -145,25 +145,12 @@ public class Main {
 
         while (true) {
             try {
-                System.out.println("Add new employee to EMS selected, you will need to enter the information for the employee");
-                String employeeName = createEmployeeManager.employeeName(sc);
-                String departmentName = createEmployeeManager.departmentName(sc);
-                int salary = createEmployeeManager.salaryAmount(sc);
-                String employeeEmail = createEmployeeManager.employeeEmail(sc);
-
-                Employee newEmployee = new Employee(0, employeeName, departmentName, salary, employeeEmail);
-
-                if (employeeManager.createEmployee(newEmployee)){
-                    System.out.println("Employee :" + newEmployee + " was successfully added to EMS.");
-                }
-                else{
-                    System.out.println("Employee was not added to EMS");
-                }
 
                 System.out.println("""
-                        Added new employee to EMS. Would you like to:\s
-                        1. Select all employee
-                        2. Add another employee
+                        Welcome to Create Employee Menu in our EMS.\s
+                        What would you like to to do:
+                        1. Select all employees
+                        2. Add new employee
                         3. Exit to return to main menu""");
                 int option = sc.nextInt();
                 sc.nextLine();
@@ -172,15 +159,13 @@ public class Main {
                         viewAllEmployees();
                         break;
                     case 2:
+                        createNewEmployee(sc);
                         break;
                     case 3:
                         break;
                     default:
                         System.out.println("Enter number 1-3");
                         break;
-                }
-                if (option == 2){
-                    continue;
                 }
                 if (option == 3){
                     break;
@@ -190,7 +175,7 @@ public class Main {
             catch (InputMismatchException e){
                 sc.nextLine();
                 System.out.println("Enter number 1-3.");
-            } catch (BlankNameException | BlankDepartmentNameException | SalaryNumberException |
+            } catch (BlankDepartmentNameException | BlankResponseException | SalaryNumberException |
                      EmailNotSupportedException e) {
                 throw new RuntimeException(e);
             }
@@ -198,4 +183,21 @@ public class Main {
 
     }
 
+    public static void createNewEmployee(Scanner sc) throws BlankResponseException, BlankDepartmentNameException, SalaryNumberException, EmailNotSupportedException {
+        System.out.println("Add new employee to EMS selected, you will need to enter the information for the employee.\n");
+        String employeeName = createEmployeeManager.employeeName(sc);
+        String departmentName = createEmployeeManager.departmentName(sc);
+        int salary = createEmployeeManager.salaryAmount(sc);
+        String employeeEmail = createEmployeeManager.employeeEmail(sc);
+
+        Employee newEmployee = new Employee(0, employeeName, departmentName, salary, employeeEmail);
+
+        if (employeeManager.createEmployee(newEmployee)){
+            System.out.println("\nNew Employee Information Added: " + newEmployee + " was successfully added to EMS.\n");
+        }
+        else{
+            System.out.println("Employee Information was not added to EMS");
+        }
+
+    }
 }
