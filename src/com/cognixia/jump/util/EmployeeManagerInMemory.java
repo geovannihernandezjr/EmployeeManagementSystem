@@ -55,8 +55,7 @@ public class EmployeeManagerInMemory implements EmployeeManager{
     }
 
     @Override
-    public boolean deleteEmployee(int id) throws EmployeeNotFoundException {
-        Employee deleteEmp = findEmployeeById(id);
+    public boolean deleteEmployee(Employee deleteEmp) {
         employeeList.remove(deleteEmp);
         return !employeeList.contains(deleteEmp);
     }

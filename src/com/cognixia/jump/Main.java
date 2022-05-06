@@ -69,6 +69,7 @@ public class Main {
                         createEmployeesMenu();
                         break;
                     case 4: // delete employee
+                        deleteEmployee();
                         break;
                     case 5: // update employee
                         break;
@@ -222,14 +223,40 @@ public class Main {
         try {
             System.out.println("\nEnter the employee ID number you are wanting to search for in EMS.");
             int employeeId = sc.nextInt();
-            if (employeeId >=0){
-                System.out.println("\nLooking for employee with ID "+employeeId + "......\n");
+            if (employeeId >= 0) {
+                System.out.println("\nLooking for employee with ID " + employeeId + "......\n");
                 System.out.println("Employee Found: " + employeeManager.findEmployeeById(employeeId) + "\n");
             }
-        }
-        catch(InputMismatchException e){
+        } catch (InputMismatchException e) {
+            sc.nextLine();
             System.out.println("ID must be a whole number!");
         } catch (EmployeeNotFoundException e) {
+            sc.nextLine();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void deleteEmployee(){
+
+        try {
+            System.out.println("Enter the ID of the Employee you wish to delete from EMS.\n");
+            int employeeId = sc.nextInt();
+            if (employeeId >= 0) {
+                System.out.println("\nLooking for employee with ID " + employeeId + "......\n");
+                Employee empDelete = employeeManager.findEmployeeById(employeeId);
+                System.out.println("Employee Found: " + empDelete + "\n");
+                System.out.println("Deleting Employee....");
+                if (employeeManager.deleteEmployee(empDelete)) {
+                    System.out.println("Employee was deleted successfully!\n");
+                } else {
+                    System.out.println("EMPLOYE WAS NOT DELETED VIEW ALL EMPLOYEES TO ENSURE");
+                }
+            }
+        } catch (InputMismatchException e) {
+            sc.nextLine();
+            System.out.println("ID must be a whole number!");
+        } catch (EmployeeNotFoundException e) {
+            sc.nextLine();
             throw new RuntimeException(e);
         }
 
