@@ -1,5 +1,6 @@
 package com.cognixia.jump.util;
 
+import com.cognixia.jump.exceptions.DepartmentNotFoundException;
 import com.cognixia.jump.exceptions.EmployeeNotFoundException;
 import com.cognixia.jump.model.Employee;
 
@@ -15,8 +16,8 @@ public interface EmployeeManager {
 
     public boolean deleteEmployee(int id) throws EmployeeNotFoundException;
 
-    public boolean updateEmployee(Employee updateEmployee);
+    public boolean updateEmployee(Employee updateEmployee) throws EmployeeNotFoundException;
 
-    public List<Employee> getEmployeesByDepartment(String dept);
+    public List<Employee> getEmployeesByDepartment(String dept) throws DepartmentNotFoundException;
 
 }

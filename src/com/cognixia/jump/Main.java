@@ -1,10 +1,7 @@
 package com.cognixia.jump;
 // CRUD Operations - Create Read Update Delete
 
-import com.cognixia.jump.exceptions.BlankDepartmentNameException;
-import com.cognixia.jump.exceptions.BlankResponseException;
-import com.cognixia.jump.exceptions.EmailNotSupportedException;
-import com.cognixia.jump.exceptions.SalaryNumberException;
+import com.cognixia.jump.exceptions.*;
 import com.cognixia.jump.model.Employee;
 import com.cognixia.jump.util.CreateEmployeeManager;
 import com.cognixia.jump.util.CreateUpdateDeleteEmployeeManger;
@@ -14,6 +11,7 @@ import com.cognixia.jump.util.EmployeeManagerInMemory;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.SortedMap;
 
 /* Create an EMS that allows us to:
 * 1. View all employees
@@ -65,6 +63,7 @@ public class Main {
                         viewEmployees();
                         break;
                     case 2: // view employee by id
+                        viewEmployeeById();
                         break;
                     case 3: // create new employee
                         createEmployeesMenu();
@@ -98,7 +97,8 @@ public class Main {
         while (true) {
             try {
                 System.out.println("""
-                        Select one of the following:\s
+                        View Employees Menu\s
+                        Select one of the following:
                         1. Select all employee
                         2. Select employees by department
                         3. Exit to return to main menu""");
@@ -109,6 +109,7 @@ public class Main {
                         viewAllEmployees();
                         break;
                     case 2:
+                        viewEmployeesByDept();
                         break;
                     case 3:
                         break;
@@ -124,6 +125,8 @@ public class Main {
             catch (InputMismatchException e){
                 sc.nextLine();
                 System.out.println("Enter number 1-3.");
+            } catch (DepartmentNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
 
@@ -196,8 +199,40 @@ public class Main {
             System.out.println("\nNew Employee Information Added: " + newEmployee + " was successfully added to EMS.\n");
         }
         else{
-            System.out.println("Employee Information was not added to EMS");
+            System.out.println("\nEmployee Information was not added to EMS");
         }
+
+    }
+    public static void viewEmployeesByDept() throws DepartmentNotFoundException {
+        System.out.println("\nEnter department name: ");
+        String department = sc.nextLine();
+
+        List<Employee> employees = employeeManager.getEmployeesByDepartment(department);
+
+        System.out.println("\nList of employees under the " + department + " department");
+
+
+        employees.forEach(System.out::println);
+        System.out.println("Going back to the View Employees Menu");
+
+
+    }
+
+    public static void viewEmployeeById(){
+        try {
+            System.out.println("\nEnter the employee ID number you are wanting to search for in EMS.");
+            int employeeId = sc.nextInt();
+            if (employeeId >=0){
+                System.out.println("\nLooking for employee with ID "+employeeId + "......\n");
+                System.out.println("Employee Found: " + employeeManager.findEmployeeById(employeeId) + "\n");
+            }
+        }
+        catch(InputMismatchException e){
+            System.out.println("ID must be a whole number!");
+        } catch (EmployeeNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 }

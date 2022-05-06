@@ -56,7 +56,9 @@ public class Employee {
     }
 
     public void setSalary(int salary) {
-        this.salary = salary;
+        if (salary >= 0) {
+            this.salary = salary;
+        }
     }
 
     public String getEmail() {

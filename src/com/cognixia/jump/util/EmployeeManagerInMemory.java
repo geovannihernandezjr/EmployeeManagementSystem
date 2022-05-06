@@ -1,10 +1,12 @@
 package com.cognixia.jump.util;
 
+import com.cognixia.jump.exceptions.DepartmentNotFoundException;
 import com.cognixia.jump.exceptions.EmployeeNotFoundException;
 import com.cognixia.jump.model.Employee;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EmployeeManagerInMemory implements EmployeeManager{
 
@@ -26,10 +28,17 @@ public class EmployeeManagerInMemory implements EmployeeManager{
 
     @Override
     public Employee findEmployeeById(int id) throws EmployeeNotFoundException {
-        for(Employee emp : employeeList){
-            if(emp.getId() == id){
-                return emp;
-            }
+        Optional<Employee> employeeId = employeeList.stream()
+                .filter( (emp) -> emp.getId() == id).findFirst();
+
+
+//        for(Employee emp : employeeList){
+//            if(emp.getId() == id){
+//                return emp;
+//            }
+//        }
+        if (!employeeId.isEmpty()){
+            return employeeId.get();
         }
         throw new EmployeeNotFoundException(id);
     }
@@ -64,14 +73,21 @@ public class EmployeeManagerInMemory implements EmployeeManager{
     }
 
     @Override
-    public List<Employee> getEmployeesByDepartment(String dept) {
-        List<Employee> deptEmployee = new ArrayList<Employee>();
+    public List<Employee> getEmployeesByDepartment(String dept) throws DepartmentNotFoundException {
+//        List<Employee> deptEmployee = new ArrayList<Employee>();
+//
+//        for (Employee emp: employeeList){
+//            if(emp.getDepartment().equals(dept)){
+//                deptEmployee.add(emp);
+//            }
+//        }
+//        return deptEmployee;
 
-        for (Employee emp: employeeList){
-            if(emp.getDepartment().equals(dept)){
-                deptEmployee.add(emp);
-            }
+        List<Employee> employees = employeeList.stream()
+                .filter( employee -> employee.getDepartment().equals(dept)).toList();
+        if(!employees.isEmpty()){
+            return employees;
         }
-        return deptEmployee;
+        throw new DepartmentNotFoundException(dept);
     }
 }
